@@ -9,13 +9,19 @@ pipeline {
                 }
             }
             steps {
-            sh 'mvn clean install'
+                sh 'mvn clean install'
             }
         }
-        stage('Docker Build') {
+        stage('Build') {
             agent any
             steps {
                 sh 'docker build -t balboel/helpdesk-app .'
+            }
+        }
+        stage('Deploy') {
+            agent any
+            steps {
+                sh 'docker run -d -p 8080:8080 balboel/helpdesk-app'
             }
         }
     }
