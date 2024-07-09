@@ -23,9 +23,14 @@ class Tiket extends Model
         'file_id',
         'ticket_id'
     ];
+
     public static function generateTicketId($user)
     {
-        $date = date('ymd'); // Get the current date in the format YYYYMMDD
+        if (is_null($user)) {
+            throw new \Exception('User is null in generateTicketId');
+        }
+
+        $date = date('ymd'); // Get the current date in the format YYMMDD
         $userId = $user->id; // Get the user's ID
 
         // Get the last ticket created by the user today
@@ -42,6 +47,7 @@ class Tiket extends Model
 
         return $ticket_id;
     }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -51,6 +57,7 @@ class Tiket extends Model
     {
         return $this->belongsTo(Status::class, 'status_id');
     }
+
     public function prioritas()
     {
         return $this->belongsTo(Prioritas::class, 'prioritas_id');
@@ -60,10 +67,12 @@ class Tiket extends Model
     {
         return $this->belongsTo(Divisi::class, 'divisi_id');
     }
+
     public function balasan()
     {
         return $this->hasMany(Reply::class, 'tiket_id');
     }
+
     public function files()
     {
         return $this->belongsTo(File::class, 'file_id');

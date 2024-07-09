@@ -11,18 +11,12 @@ use App\Models\Reply;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Role;
 
 class TiketController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-
     public function index(Request $request)
     {
         $query = Tiket::orderBy('id', 'desc');
@@ -46,7 +40,6 @@ class TiketController extends Controller
                 ->orWhereHas('divisi', function ($query) use ($search_filter) {
                     $query->where('nama_divisi', 'LIKE', '%' . $search_filter . '%');
                 });
-
         }
 
         if ($request->has('date') && $request->input('date') != '') {
@@ -83,31 +76,45 @@ class TiketController extends Controller
         return view('tiket.daftar', compact('data'));
     }
 
+    public function getTickets(Request $request)
+    {
+        $user = Auth::user();
+        Log::info('Fetching tickets for user:', ['user_id' => $user->id]);
+
+        $tickets = Tiket::where('user_id', $user->id)
+            ->with('prioritas', 'status')
+            ->get();
+
+        Log::info('Fetched tickets:', ['tickets' => $tickets]);
+
+        return response()->json($tickets);
+    }
+
     public function create()
     {
         $prioritasOptions = Prioritas::all();
         $divisiOptions = Divisi::all();
 
-        return view('tiket.ajukan')->with('prioritasOptions', $prioritasOptions)->with('divisiOptions', $divisiOptions);
-
+        return view('tiket.ajukan', compact('prioritasOptions', 'divisiOptions'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'pengaju' => 'required|string|max:255',
+            'aplikasi' => 'required|string|max:255',
+            'prioritas_id' => 'required|exists:prioritas,id',
+            'deskripsi' => 'required|string',
+            'divisi_id' => 'required|exists:divisi,id',
+        ]);
+
         Session::flash('judul', $request->judul);
         Session::flash('pengaju', $request->pengaju);
         Session::flash('aplikasi', $request->aplikasi);
         Session::flash('prioritas_id', $request->prioritas_id);
         Session::flash('deskripsi', $request->deskripsi);
         Session::flash('divisi_id', $request->divisi_id);
-
 
         $data = [
             'judul' => $request->judul,
@@ -120,8 +127,8 @@ class TiketController extends Controller
             'user_id' => Auth::user()->id,
         ];
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
+        if ($request->hasFile('formFile')) {
+            $file = $request->file('formFile');
             $originalName = $file->getClientOriginalName();
             $serverName = $file->hashName();
             $size = $file->getSize();
@@ -131,7 +138,6 @@ class TiketController extends Controller
             $disk = 'local';
 
             // Store the file information in the database
-
             $fileData = [
                 'uuid' => (string) Str::uuid(),
                 'nama_file' => $originalName,
@@ -149,11 +155,12 @@ class TiketController extends Controller
 
         $user = Auth::user();
         $data['ticket_id'] = Tiket::generateTicketId($user);
+
         try {
             Tiket::create($data);
             return redirect()->route('tiket.daftar')->with('success', 'Tiket berhasil ditambahkan');
         } catch (\Exception $e) {
-            return ("Gagal menambahkan tiket " . $e->getMessage());
+            return "Gagal menambahkan tiket: " . $e->getMessage();
         }
     }
 
@@ -231,6 +238,7 @@ class TiketController extends Controller
 
         return redirect()->back()->with('success', 'Ticket closed');
     }
+
     public function updatePrioritas(Request $request, Tiket $tiket)
     {
         $validatedData = $request->validate([
@@ -241,6 +249,7 @@ class TiketController extends Controller
 
         return redirect()->back()->with('success', 'Prioritas updated successfully');
     }
+
     public function reopen($id)
     {
         $tiket = Tiket::find($id);
