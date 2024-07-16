@@ -16,6 +16,8 @@ class DivisiSeeder extends Seeder
         DB::table('divisi')->insert([
             ['id' => 1, 'nama_divisi' => 'IT Department', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 2, 'nama_divisi' => 'Operation', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'nama_divisi' => 'Finance', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'nama_divisi' => 'Commercial', 'created_at' => now(), 'updated_at' => now()],
             // Add more divisions as necessary
         ]);
     }

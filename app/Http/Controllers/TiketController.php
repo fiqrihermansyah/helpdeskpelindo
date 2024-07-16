@@ -164,15 +164,16 @@ class TiketController extends Controller
         }
     }
 
+
     public function show($id)
     {
-        $tiket = Tiket::with('prioritas', 'status', 'user', 'balasan', 'files')->find($id);
+        $tiket = Tiket::with(['prioritas', 'status', 'user', 'balasan.user', 'balasan.files', 'files', 'divisi'])->find($id);
 
         if (!$tiket) {
-            return redirect()->back()->with('error', 'Ticket not found');
+            return response()->json(['message' => 'Ticket not found'], 404);
         }
 
-        return view('tiket.show', compact('tiket'));
+        return response()->json($tiket, 200);
     }
 
     public function reply(Request $request)
@@ -200,7 +201,6 @@ class TiketController extends Controller
             $disk = 'local';
 
             // Store the file information in the database
-
             $fileData = [
                 'uuid' => (string) Str::uuid(),
                 'nama_file' => $originalName,

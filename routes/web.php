@@ -45,7 +45,7 @@ Route::middleware(['auth', 'user-role:2', 'throttle:60,1'])->group(function () {
     Route::get('/submission', [SubmissionController::class, 'submissionsaya'])->name('user.submissionsaya');
     Route::get('submissions/export/{user_id}', [SubmissionController::class, 'export']);
     Route::get('/tiketsaya', [TiketsController::class, 'tiketsaya'])->name('user.tiketsaya');
-});
+}); 
 
 Route::middleware(['auth', 'user-role:1', 'throttle:60,1'])->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');

@@ -30,7 +30,7 @@ class CreateUserSeeder extends Seeder
                 'nama' => 'Admin User',
                 'nipp' => 'admin',
                 'password' => bcrypt('admin'), // Replace with secure password
-                'divisi_id' => 2, // Ensure this matches the 'Operation' ID from DivisiSeeder
+                'divisi_id' => 2, 
                 'status' => true,
                 'nomor_hp' => '087884550876',
                 'avatar' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=retro',
@@ -40,7 +40,7 @@ class CreateUserSeeder extends Seeder
                 'nama' => 'Rahman Hakim',
                 'nipp' => 'rahman',
                 'password' => bcrypt('rahman'), // Replace with secure password
-                'divisi_id' => 2, // Ensure this matches the 'Operation' ID from DivisiSeeder
+                'divisi_id' => 2, 
                 'status' => true,
                 'nomor_hp' => '087884550876',
                 'avatar' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=retro',
@@ -50,7 +50,16 @@ class CreateUserSeeder extends Seeder
                 'nama' => 'Akbar Frimawan',
                 'nipp' => 'akbar',
                 'password' => bcrypt('akbar'), // Replace with secure password
-                'divisi_id' => 2, // Ensure this matches the 'Operation' ID from DivisiSeeder
+                'divisi_id' => 3, 
+                'nomor_hp' => '087884550876',
+                'avatar' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=retro',
+                'role' => 'user'
+            ],
+            [
+                'nama' => 'Fiqri Hermansyah',
+                'nipp' => 'fiqri',
+                'password' => bcrypt('fiqri'), // Replace with secure password
+                'divisi_id' => 4, 
                 'status' => true,
                 'nomor_hp' => '087884550876',
                 'avatar' => 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=retro',

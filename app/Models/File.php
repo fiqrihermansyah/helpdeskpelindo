@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class File extends Model
 {
     use HasFactory;
+
     protected $table = 'files';
     protected $fillable = [
         'uuid',
@@ -26,16 +27,19 @@ class File extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function url(): ?string
     {
         if ($this->disk === 'public') {
-            return Storage::disk($this->disk)->url($this->path . DIRECTORY_SEPARATOR . $this->server_name);
+            return Storage::disk($this->disk)->url($this->path . DIRECTORY_SEPARATOR . $this->nama_server);
         }
         return null;
     }
+
     public function tiket()
     {
-        return $this->hasOne(Tiket::class);
+        return $this->hasOne(Tiket::class, 'file_id');
     }
+
     public $timestamps = true;
 }

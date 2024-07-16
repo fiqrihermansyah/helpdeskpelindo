@@ -23,7 +23,6 @@ class UsersController extends Controller
                 ->orWhereHas('divisi', function ($query) use ($search) {
                     $query->where('nama_divisi', 'LIKE', '%' . $search . '%');
                 });
-
         }
 
         $users = $query->paginate(10);
@@ -31,6 +30,7 @@ class UsersController extends Controller
 
         return view('admin.user', compact('users', 'roles'));
     }
+
     public function updateRole(Request $request)
     {
         $user = User::find($request->user_id);

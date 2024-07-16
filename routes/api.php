@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\Users\UsersController; // Import UsersController
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/divisions', [ApiController::class, 'getDivisi'])->name('divisions.index');
     Route::post('/tickets', [ApiController::class, 'storeTicket'])->name('tickets.store');
     Route::get('/tickets', [ApiController::class, 'getTickets'])->name('tickets.index');
+    Route::post('/tickets/reply', [ApiController::class, 'reply'])->name('tickets.reply');
+    Route::get('/tickets/{id}', [ApiController::class, 'showTicket'])->name('tickets.show');
+    Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
+    Route::post('/submissions', [SubmissionController::class, 'store'])->name('submissions.store');
+
+    // User management routes
+    Route::get('/users', [ApiController::class, 'getUsers'])->name('users.index');
+    Route::get('/roles', [ApiController::class, 'getRoles'])->name('roles.index');
+    Route::post('/attach-roles', [ApiController::class, 'attachRoles'])->name('roles.attach');
 });
-
-
